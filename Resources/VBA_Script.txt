@@ -1,0 +1,127 @@
+Sub year_stock()
+
+  ' Set an initial variable for holding the brand name
+  Dim Brand_Name As String
+
+  
+  Dim Brand_Total As Double
+  Dim Clos_Total As Double
+  Dim Open_Total As Double
+  Dim Count As Integer
+  Dim greatest As Double
+  Dim lowest As Double
+  
+  Dim greatest_vol As Double
+  
+  
+  Cells(1, 11).Value = "Ticker_name"
+  Cells(1, 12).Value = "Total_stock_Volume"
+  Cells(1, 13).Value = "Year_Change"
+  Cells(1, 14).Value = "Percent_Change"
+  
+  Cells(1, 17).Value = "Ticker"
+  Cells(1, 18).Value = "Value"
+  Cells(2, 16).Value = "Greatest%Increase"
+  Cells(3, 16).Value = "Lowest%Increase"
+  Cells(4, 16).Value = "Greatest Total Volume"
+  Brand_Total = 0
+  Cells(2, 18).Value = "0.00%"
+  Cells(3, 18).Value = "0.00%"
+  Range("n:n").NumberFormat = "0.00%"
+  
+  Dim Summary_Table_Row As Integer
+  Summary_Table_Row = 2
+
+  row_count = ActiveSheet.UsedRange.Rows.Count
+  'MsgBox (row_count)
+ 
+  Dim a(3) As Variant
+  Count = 0
+  greatest = 0
+  For i = 2 To row_count + 1
+    
+    Open_Total = Cells(i, 3).Value
+    
+    
+    If Cells(i + 1, 1).Value <> Cells(i, 1).Value Then
+
+      
+      Brand_Name = Cells(i, 1).Value
+
+  
+      Brand_Total = Brand_Total + Cells(i, 7).Value
+      Clos_Total = Cells(i, 6).Value
+      Open_Total = Cells((i - Count), 3)
+
+      Range("K" & Summary_Table_Row).Value = Brand_Name
+      
+      Range("L" & Summary_Table_Row).Value = Brand_Total
+      
+      If (Clos_Total - Open_Total) > 0 Then
+      Range("M" & Summary_Table_Row).Value = Clos_Total - Open_Total
+      Range("M" & Summary_Table_Row).Interior.ColorIndex = 10
+      Else:
+      Range("M" & Summary_Table_Row).Value = Clos_Total - Open_Total
+      Range("M" & Summary_Table_Row).Interior.ColorIndex = 3
+      End If
+      If (Open_Total <> 0) Then
+      Range("N" & Summary_Table_Row).Value = ((Clos_Total - Open_Total) / Open_Total)
+      
+     Else:
+     Range("N" & Summary_Table_Row).Value = 0
+     
+     End If
+      
+     
+      Summary_Table_Row = Summary_Table_Row + 1
+      
+      ' Reset the Brand Total
+      Brand_Total = 0
+      Clos_Total = 0
+      Count = 0
+      
+      Erase a
+      greatest = 0
+      lowest = 0
+greatest_vol = 0
+    ' If the cell immediately following a row is the same brand...
+    Else
+
+      ' Add to the Brand Total
+      Brand_Total = Brand_Total + Cells(i, 7).Value
+      Count = Count + 1
+            
+      
+
+    End If
+
+  Next i
+greatest = 0
+greatest_vol = 0
+lowest = 0
+For k = 2 To row_count
+If Cells(k, 14).Value > greatest Then
+greatest = Cells(k, 14).Value
+Cells(2, 18).Value = greatest
+Cells(2, 17).Value = Cells(k, 11).Value
+End If
+Next k
+For j = 2 To row_count
+If Cells(j, 14).Value < lowest Then
+lowest = Cells(j, 14).Value
+Cells(3, 18).Value = lowest
+Cells(3, 17).Value = Cells(j, 11).Value
+End If
+Next j
+For l = 2 To row_count
+If Cells(l, 12).Value > greatest_vol Then
+greatest_vol = Cells(l, 12).Value
+Cells(4, 18).Value = greatest_vol
+Cells(4, 17).Value = Cells(l, 11).Value
+End If
+Next l
+
+End Sub
+
+
+
